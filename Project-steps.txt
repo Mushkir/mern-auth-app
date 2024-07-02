@@ -1,0 +1,15 @@
+Process
+1. Create frontend  - React.js
+2. Create and configure backend - Node.js & Express.js
+3. Create and configure database - MongoDB
+4. Create First Model (User)
+5. Create a test API route (Controller)
+6. Create sign up API route.
+7. Configure middleware error management.
+8. Create custom error function in Utils.js
+9. Design Sign up page.
+10. Implement sign up functionality.
+11. Create Sign-in functionality.
+    11.1 Use token package in cookies: Packge Name: Json Web Token (JWT)
+12. Design Sign in UI and Connect with backend
+13. After login need to store logged-in user detail. To achieve these kind of works Redux will be used. 
