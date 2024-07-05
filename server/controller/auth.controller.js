@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import User from "../model/user.model.js";
-import { use } from "bcrypt/promises.js";
+import jwt from "jsonwebtoken";
 
 export const AuthIndex = (req, res) => {
   res.json({ msg: "From Auth GET" });
@@ -36,4 +36,42 @@ export const SignUp = async (req, res) => {
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
+};
+
+export const SignIn = async (req, res, next) => {
+  const { email, password } = req.body;
+
+  try {
+    const findUser = await User.findOne({ email: email });
+
+    if (!findUser) {
+      res.json({ status: 404, message: "User not found" });
+    } else {
+      const validPassword = bcrypt.compareSync(password, findUser.password);
+
+      if (!validPassword) {
+        res.json({ status: 401, message: "Wrong creditials" });
+      } else {
+        const token = jwt.sign(
+          { userId: findUser._id },
+          process.env.SECRET_KEY
+        );
+        const { password: password, ...userDataExceptPassword } =
+          findUser.toObject();
+
+        res
+          .cookie("access_token", token, {
+            expires: new Date(Date.now() + 86400000),
+            secure: true,
+            httpOnly: true,
+          })
+          .json({ status: 200, userDataExceptPassword });
+      }
+    }
+
+    // res.json(findUser);
+  } catch (error) {
+    console.log("Error from SignIn: " + error.message);
+  }
+  // res.json(email);
 };
