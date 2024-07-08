@@ -6,6 +6,8 @@ import TheGuestLayout from "./layouts/TheGuest.jsx";
 import TheHomePage from "./pages/TheHomePage.jsx";
 import TheSignUpPage from "./pages/TheSignUpPage.jsx";
 import TheSignInPage from "./pages/TheSignInPage.jsx";
+import { store } from "./redux/store.js";
+import { Provider } from "react-redux";
 
 const router = createBrowserRouter([
   {
@@ -29,5 +31,7 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <RouterProvider router={router} />
+  <Provider store={store}>
+    <RouterProvider router={router} />
+  </Provider>
 );

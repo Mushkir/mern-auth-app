@@ -1,8 +1,15 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setSignInUserSession } from "../redux/user/userSlice";
 
 const TheSignInPage = () => {
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+
   const [formData, setFormData] = useState({});
 
   const handleChange = (e) => {
@@ -26,7 +33,7 @@ const TheSignInPage = () => {
       });
 
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
 
       const { status } = data;
 
@@ -45,12 +52,16 @@ const TheSignInPage = () => {
           icon: "error",
         });
       } else if (status == 200) {
+        console.log(data);
+        const { userDataExceptPassword } = data;
         Swal.fire({
           title: "Success!",
           text: `Login success!`,
           icon: "success",
         }).then((result) => {
           if (result.isConfirmed == true) {
+            dispatch(setSignInUserSession(userDataExceptPassword)); // Setting loggedin user's data as SESSION
+            navigate("/");
             e.target.reset();
           }
         });
