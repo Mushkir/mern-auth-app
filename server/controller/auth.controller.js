@@ -75,3 +75,62 @@ export const SignIn = async (req, res, next) => {
   }
   // res.json(email);
 };
+
+export const GoogleAuth = async (req, res) => {
+  const { name, email, photo } = req.body;
+
+  /*
+  DB col:
+  username: name,
+  email: email,
+  password: ?
+  img: photo
+  */
+
+  try {
+    const findUser = await User.findOne({ email: email });
+
+    if (!findUser) {
+      const generatedPassword =
+        Math.random().toString(36).slice(-8) +
+        Math.random().toString(36).slice(-8);
+
+      const encryptedPassword = bcrypt.hashSync(generatedPassword, 10);
+
+      const newUser = new User({
+        username: name,
+        email: email,
+        password: encryptedPassword,
+        profilePicture: photo,
+      });
+
+      const user = await newUser.save();
+
+      const { password, ...rest } = user.toObject();
+
+      const token = jwt.sign({ user: user._id }, process.env.SECRET_KEY);
+
+      res
+        .cookie("access_token", token, {
+          expires: new Date(Date.now() + 86400000),
+          secure: true,
+          httpOnly: true,
+        })
+        .json(rest);
+    } else {
+      const token = jwt.sign({ user: findUser._id }, process.env.SECRET_KEY);
+
+      const { password, ...rest } = findUser.toObject();
+
+      res
+        .cookie("access_token", token, {
+          expires: new Date(Date.now() + 86400000),
+          secure: true,
+          httpOnly: true,
+        })
+        .json(rest);
+    }
+  } catch (error) {
+    console.log(`Error from GoogleAuth: ${error.message}`);
+  }
+};
