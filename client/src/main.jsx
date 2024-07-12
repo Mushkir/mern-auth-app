@@ -8,6 +8,8 @@ import TheSignUpPage from "./pages/TheSignUpPage.jsx";
 import TheSignInPage from "./pages/TheSignInPage.jsx";
 import { store } from "./redux/store.js";
 import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import persistStore from "redux-persist/es/persistStore";
 
 const router = createBrowserRouter([
   {
@@ -30,8 +32,12 @@ const router = createBrowserRouter([
   },
 ]);
 
+let persistor = persistStore(store);
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>
-    <RouterProvider router={router} />
+    <PersistGate loading={null} persistor={persistor}>
+      <RouterProvider router={router} />
+    </PersistGate>
   </Provider>
 );

@@ -13,3 +13,13 @@ Process
     11.1 Use token package in cookies: Packge Name: Json Web Token (JWT)
 12. Design Sign in UI and Connect with backend
 13. After login need to store logged-in user detail. To achieve these kind of works Redux will be used. 
+    13.1 Install Redux toolkit
+    13.2 Configure store inside redux foler with getDefaultMiddleware.
+    13.3 Create Slice
+14. Add Redux Persist
+15. Create OAuth Component
+16. Do the Firebase GoogleAuth configuration.
+    If the user email exists in User model, need to login with cookie (JWT), else need to create new user using GoogleAuth
+17. Then Implement navigate to profile page if user exist, otherwise need to navigate signin page. 
+18. Design Profile Page
+19. Implement img upload feature
